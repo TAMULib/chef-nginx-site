@@ -1,23 +1,16 @@
 nginx-site Cookbook
 ===================
-TODO: Enter the cookbook description here.
-
-e.g.
-This cookbook makes your favorite breakfast sandwhich.
+Cookbook for creating nginx sites to be used in conjunction with nginx cookbook. 
 
 Requirements
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
 
-e.g.
-#### packages
-- `toaster` - nginx-site needs toaster to brown your bagel.
+#### cookbooks
+- `nginx` - nginx cookbook, '~> 2.6'
 
 Attributes
 ----------
-TODO: List you cookbook attributes here.
 
-e.g.
 #### nginx-site::default
 <table>
   <tr>
@@ -27,20 +20,18 @@ e.g.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['nginx-site']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
+    <td><tt>['vhosts']</tt></td>
+    <td>Hash</td>
+    <td>vhosts</td>
+    <td><tt>nil</tt></td>
   </tr>
 </table>
 
 Usage
 -----
 #### nginx-site::default
-TODO: Write usage instructions for each cookbook.
 
-e.g.
-Just include `nginx-site` in your node's `run_list`:
+Include `nginx-site` in your node's `run_list`:
 
 ```json
 {
@@ -50,6 +41,22 @@ Just include `nginx-site` in your node's `run_list`:
   ]
 }
 ```
+
+`vhosts` is a Hash where key is name of the file in '/etc/nginx/sites-available' and value is a hash with following keys:
+
+key - name
+- 'server_name' - (required) server name
+- 'root' - (required) server root
+- 'default' - whether it's default site, default false
+- 'autoindex' - whether autoindex is enabled for the root directory, default false
+- 'error_log' - error log, default "#{node['nginx']['log_dir']}/name-error.log"
+- 'access_log' - access log, default "#{node['nginx']['log_dir']}/name-access.log"
+- 'php' - php info, use in conjuction with php-site cookbook
+  - 'root' - php root, default to 'root' if not specific
+- 'uwsgi' - uwsgi info, use in conjuction with uwsgi-site cookbook
+  - 'static' - Hash list of static locations
+    - key - url location
+    - value - path of static location
 
 Contributing
 ------------
@@ -65,4 +72,4 @@ e.g.
 
 License and Authors
 -------------------
-Authors: TODO: List authors
+Authors: Richard Li

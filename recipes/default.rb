@@ -21,8 +21,8 @@ directory '/var/run/nginx' do
   group node['nginx']['group']
 end
 
-if node['vhost'].is_a? Hash
-  node['vhost'].each do |name,info|
+if node['vhosts'].is_a? Hash
+  node['vhosts'].each do |name,info|
     if info.key?('mkdir') and info['mkdir'] 
       if not File.exists?(info['root'])
         directory info['root'] do
@@ -45,8 +45,9 @@ if node['vhost'].is_a? Hash
       source "vhost.conf.erb"
       path File.join("/etc/nginx/sites-available/",name)
       variables(
-        :host => info,
         :name => name,
+        :info => info,
+        :nginx => node['nginx'],
       )
       notifies :restart, 'service[nginx]', :delayed
     end

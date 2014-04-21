@@ -1,31 +1,31 @@
 server {
-  listen 80 <%= 'default' if @host['default'] -%>;
-  server_name <%= @host['server_name'] -%>;
+  listen 80 <%= 'default' if @info['default'] -%>;
+  server_name <%= @info['server_name'] -%>;
   server_tokens off;
-  <%= "error_log #{@host['error_log']};" if @host.key? 'errorlog' %>
-  <%= "access_log #{@host['access_log']};" if @host.key? 'accesslog' %>
+  error_log <%= @info.key?('error_log') ? @info['error_log'] : File.join(@nginx['log_dir'], @name + "-error.log") %>
+  access_log <%= @info.key?('access_log') ? @info['access_log'] : File.join(@nginx['log_dir'], @name + "-access.log") %>
   location / {
-    root <%= @host['root'] -%>;
-    index <%= "index.php" if @host.key? 'php' and @host['php'] -%> index.html index.htm;
-    <%= 'autoindex on;' if @host['autoindex'] %>
-    <% if @host.key?('uwsgi') -%>
+    root <%= @info['root'] -%>;
+    index <%= "index.php" if @info.key? 'php' and @info['php'] -%> index.html index.htm;
+    <%= 'autoindex on;' if @info['autoindex'] %>
+    <% if @info.key?('uwsgi') -%>
     include uwsgi_params;
     uwsgi_pass unix:///var/run/nginx/<%=@name-%>.sock;
     <% end -%>
   }
-  <% if @host.key?('phpcgi') and @host['phpcgi']['enable'] -%>
+  <% if @info.key?('php') -%>
   location ~ \.php$ {
-    root <%= (@host['phpcgi']['root'].nil?) ? @host['root'] :  @host['phpcgi']['root'] -%>;
-    fastcgi_pass <%= (@host['phpcgi']['cgi_pass'].nil?) ? "unix:/var/lib/nginx/fpm.sock" : @host['php']['cgi_pass'] -%>;
-    fastcgi_index <%= (@host['phpcgi']['index'].nil?) ? 'index.php' : @host['phpcgi']['index'] -%>;
-    fastcgi_param SCRIPT_FILENAME <%= (@host['phpcgi']['cgi_param'].nil?) ? @host['root'] : @host['phpcgi']['cgi_param'] -%>$fastcgi_script_name;
+    root <%= @info['php'].key?('root') ? @info['root'] :  @info['php']['root'] -%>;
+    fastcgi_pass <%= (@info['phpcgi']['cgi_pass'].nil?) ? "unix:/var/lib/nginx/fpm.sock" : @info['php']['cgi_pass'] -%>;
+    fastcgi_index <%= (@info['phpcgi']['index'].nil?) ? 'index.php' : @info['phpcgi']['index'] -%>;
+    fastcgi_param SCRIPT_FILENAME <%= (@info['phpcgi']['cgi_param'].nil?) ? @info['root'] : @info['phpcgi']['cgi_param'] -%>$fastcgi_script_name;
     include fastcgi_params;
   }
   <% end #phpcgi -%>
-  <% if @host.key?('uwsgi') and @host['uwsgi'].key?('static')-%>
-  <% @host['uwsgi']['static'].each do |location,path|-%>
+  <% if @info.key?('uwsgi') and @info['uwsgi'].key?('static')-%>
+  <% @info['uwsgi']['static'].each do |location,path|-%>
   location <%=location-%> {
-    root <%=if path.is_a? String then path else @host['root'] end%>;
+    root <%=if path.is_a? String then path else @info['root'] end%>;
   }
   <% end #each -%>
   <% end #if uwsgi-%>

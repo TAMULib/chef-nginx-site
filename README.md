@@ -44,7 +44,7 @@ Include `nginx-site` in your node's `run_list`:
 
 `vhosts` is a Hash where key is name of the file in '/etc/nginx/sites-available' and value is a hash with following keys:
 
-key - name
+- key - name
 - 'server_name' - (required) server name
 - 'root' - (required) server root
 - 'default' - whether it's default site, default false

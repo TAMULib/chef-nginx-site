@@ -1,0 +1,32 @@
+server {
+  listen 80 <%= 'default' if @host['default'] -%>;
+  server_name <%= @host['server_name'] -%>;
+  server_tokens off;
+  <%= "error_log #{@host['error_log']};" if @host.key? 'errorlog' %>
+  <%= "access_log #{@host['access_log']};" if @host.key? 'accesslog' %>
+  location / {
+    root <%= @host['root'] -%>;
+    index <%= "index.php" if @host.key? 'php' and @host['php'] -%> index.html index.htm;
+    <%= 'autoindex on;' if @host['autoindex'] %>
+    <% if @host.key?('uwsgi') -%>
+    include uwsgi_params;
+    uwsgi_pass unix:///var/run/nginx/<%=@name-%>.sock;
+    <% end -%>
+  }
+  <% if @host.key?('phpcgi') and @host['phpcgi']['enable'] -%>
+  location ~ \.php$ {
+    root <%= (@host['phpcgi']['root'].nil?) ? @host['root'] :  @host['phpcgi']['root'] -%>;
+    fastcgi_pass <%= (@host['phpcgi']['cgi_pass'].nil?) ? "unix:/var/lib/nginx/fpm.sock" : @host['php']['cgi_pass'] -%>;
+    fastcgi_index <%= (@host['phpcgi']['index'].nil?) ? 'index.php' : @host['phpcgi']['index'] -%>;
+    fastcgi_param SCRIPT_FILENAME <%= (@host['phpcgi']['cgi_param'].nil?) ? @host['root'] : @host['phpcgi']['cgi_param'] -%>$fastcgi_script_name;
+    include fastcgi_params;
+  }
+  <% end #phpcgi -%>
+  <% if @host.key?('uwsgi') and @host['uwsgi'].key?('static')-%>
+  <% @host['uwsgi']['static'].each do |location,path|-%>
+  location <%=location-%> {
+    root <%=if path.is_a? String then path else @host['root'] end%>;
+  }
+  <% end #each -%>
+  <% end #if uwsgi-%>
+}

@@ -13,3 +13,9 @@ suites:
     run_list:
       - recipe[nginx-site::default]
     attributes:
+      vhosts:
+        test:
+          server_name: "test-server"
+          root: "/tmp"
+          default: true
+          autoindex: true

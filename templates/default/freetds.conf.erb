@@ -1,0 +1,9 @@
+[global]
+  text size = 64512
+
+<% @servers.each do |name,prop| -%>
+[<%=name-%>]
+<% prop.each do |attr,value| -%>
+<%=attr-%> = <%=value%>
+<% end -%>
+<% end -%>

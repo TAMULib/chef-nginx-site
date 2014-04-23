@@ -25,6 +25,31 @@ Attributes
     <td>vhosts</td>
     <td><tt>nil</tt></td>
   </tr>
+  <tr>
+    <td><tt>['php']</tt></td>
+    <td>Hash</td>
+    <td>the php configuration</td>
+    <td><tt>see below</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['php']['modules']</tt></td>
+    <td>Array</td>
+    <td>list of php modules needs to be installed</td>
+    <td><tt>[]</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['php']['ini']</tt></td>
+    <td>Hash</td>
+    <td>the php ini configuration</td>
+    <td><tt>currently two available: post_max_size, upload_max_filesize</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['mssql']</tt></td>
+    <td>Hash</td>
+    <td>the mssql server configuration (freetds)</td>
+    <td><tt>nil</tt></td>
+  </tr>
+
 </table>
 
 Usage

@@ -19,3 +19,25 @@ suites:
           root: "/tmp"
           default: true
           autoindex: true
+  - name: php
+    run_list:
+      - recipe[nginx-site::php]
+    attributes:
+      php:
+        modules:
+          - mssql
+          - mysql
+        ini:
+          post_max_size: "128M"
+          upload_max_filesize: "128M"
+      vhosts:
+        test:
+          server_name: "test-server"
+          root: "/tmp"
+          default: true
+          autoindex: true
+          php: {}
+      mssql:
+        mssql1:
+          attr1: val1
+          attr2: val2

@@ -36,7 +36,8 @@ suites:
           root: "/tmp"
           default: true
           autoindex: true
-          php: {}
+          php:
+            root: '/tmp/php'
       mssql:
         mssql1:
           attr1: val1

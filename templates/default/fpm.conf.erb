@@ -1,0 +1,26 @@
+<% @vhosts.each do |name,info| -%>
+
+<% unless info.attribute?('php') then next end -%>
+
+[<%= name -%>]
+
+listen = <%= "/var/lib/nginx/#{name}.sock" %>
+
+security.limit_extensions = .php
+
+listen.backlog = -1
+
+listen.owner = <%= @nginx['user'] %>
+listen.group = <%= @nginx['group'] %>
+listen.mode = 0660
+
+user = <%= @nginx['user'] %>
+group = <%= @nginx['group'] %>
+
+pm = dynamic
+pm.max_children = 40
+pm.start_servers = 15
+pm.min_spare_servers = 5
+pm.max_spare_servers = 15
+pm.max_requests = 500
+<% end -%>

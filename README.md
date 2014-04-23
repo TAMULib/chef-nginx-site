@@ -5,6 +5,9 @@ Cookbook for creating nginx sites to be used in conjunction with nginx cookbook.
 Requirements
 ------------
 
+#### supported OS
+- RHEL/CentOS/Oracle Linux 6.4/6.5
+
 #### cookbooks
 - `nginx` - nginx cookbook, '~> 2.6'
 
@@ -25,6 +28,31 @@ Attributes
     <td>vhosts</td>
     <td><tt>nil</tt></td>
   </tr>
+  <tr>
+    <td><tt>['php']</tt></td>
+    <td>Hash</td>
+    <td>the php configuration</td>
+    <td><tt>see below</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['php']['modules']</tt></td>
+    <td>Array</td>
+    <td>list of php modules needs to be installed</td>
+    <td><tt>[]</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['php']['ini']</tt></td>
+    <td>Hash</td>
+    <td>the php ini configuration</td>
+    <td><tt>currently two available: post_max_size, upload_max_filesize</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['mssql']</tt></td>
+    <td>Hash</td>
+    <td>the mssql server configuration (freetds)</td>
+    <td><tt>nil</tt></td>
+  </tr>
+
 </table>
 
 Usage
@@ -57,6 +85,32 @@ Include `nginx-site` in your node's `run_list`:
   - 'static' - Hash list of static locations
     - key - url location
     - value - path of static location
+
+#### nginx-site::default
+
+For php site, use `nginx-site::php` instead, and set the `node['php']` attributes as described above. For example, to setup a site named `test` with mysql and mssql, with post_max_size and upload_max_filesize set to 128M, module you'd set:
+
+```ruby
+default_attributes(
+  'php' => {
+    'modules' => ['mysql','mssql'],
+    'ini' => {
+      'post_max_size' => '128M',
+      'upload_max_filesize' => '128M',
+    },
+  },
+  'vhosts' => {
+    'test' => {
+      'server_name' => 'test.com',
+      'root' => '/usr/share/nginx/www',
+      'default' => true,
+      'php' => {
+        'root' => '/usr/share/nginx/php',
+      },
+    },
+  },
+)
+```
 
 Contributing
 ------------

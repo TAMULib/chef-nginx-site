@@ -15,7 +15,7 @@ server {
   }
   <% if @info.key?('php') -%>
   location ~ \.php$ {
-    root <%= @info['php'].key?('root') ? @info['root'] :  @info['php']['root'] -%>;
+    root <%= @info['php'].key?('root') ? @info['php']['root'] :  @info['root'] -%>;
     fastcgi_pass <%= "unix:/var/lib/nginx/#{@name}.sock"  -%>;
     fastcgi_index <%= (@info['php'].key?('index')) ? @info['php']['index'] : 'index.php' -%>;
     fastcgi_param SCRIPT_FILENAME <%= (@info['php'].key?('root')) ? @info['php']['root'] : @info['root'] -%>$fastcgi_script_name;

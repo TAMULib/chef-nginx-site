@@ -44,7 +44,7 @@ Attributes
     <td><tt>['php']['ini']</tt></td>
     <td>Hash</td>
     <td>the php ini configuration</td>
-    <td><tt>currently two available: post_max_size, upload_max_filesize</tt></td>
+    <td><tt>currently two available: post_max_size, upload_max_filesize, timezone</tt></td>
   </tr>
   <tr>
     <td><tt>['mssql']</tt></td>

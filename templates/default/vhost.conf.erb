@@ -2,6 +2,7 @@ server {
   listen 80 <%= 'default' if @info['default'] -%>;
   server_name <%= @info['server_name'] -%>;
   server_tokens off;
+  <%= "client_max_body_size #{@info['max_body']};" if @info.key? 'max_body' %>
   error_log <%= @info.key?('error_log') ? @info['error_log'] : File.join(@nginx['log_dir'], @name + "-error.log") %>;
   access_log <%= @info.key?('access_log') ? @info['access_log'] : File.join(@nginx['log_dir'], @name + "-access.log") %>;
   location / {

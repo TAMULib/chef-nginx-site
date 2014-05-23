@@ -20,3 +20,7 @@ describe file('/etc/nginx/sites-available/test') do
   its(:content) { should match /autoindex on/}
   its(:content) { should match /listen 80 default/}
 end
+
+describe file('/etc/rsyslog.d/25-nginx.conf') do
+  it { should be_file }
+end

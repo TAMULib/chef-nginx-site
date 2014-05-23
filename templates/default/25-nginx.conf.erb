@@ -1,0 +1,12 @@
+$ModLoad imfile
+
+<% @error_log.each do |file| -%>
+$InputFileName <%= file %>
+$InputFileTag nginx:
+$InputFileStateFile nginx_error
+$InputFileFacility daemon
+$InputFileSeverity err
+$InputRunFileMonitor
+$InputFilePollInterval 2
+
+<% end #error_log.each -%>

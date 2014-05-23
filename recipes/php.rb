@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Cookbook Name:: php-site
 # Recipe:: default
@@ -7,11 +8,11 @@
 include_recipe 'nginx-site::default'
 
 package 'php-fpm' do
-  not_if {File.exists? "/usr/sbin/php-fpm"}
+  not_if { File.exist? '/usr/sbin/php-fpm' }
 end
 
 service 'php-fpm' do
-  supports :status => true, :restart => true
+  supports status: true, restart: true
   action [:start, :enable]
 end
 
@@ -23,13 +24,13 @@ node['php']['modules'].each do |name|
 
   if name == 'mssql'
     template '/etc/freetds.conf' do
-      only_if {node.attribute?('mssql')}
+      only_if { node.attribute?('mssql') }
       source 'freetds.conf.erb'
       mode 0644
       owner 'root'
       group 'root'
       variables(
-        :servers => node['mssql'],
+        servers: node['mssql']
       )
       notifies :restart, 'service[php-fpm]', :delayed
     end
@@ -37,23 +38,23 @@ node['php']['modules'].each do |name|
 
 end
 
-file "/etc/php-fpm.d/www.conf" do
+file '/etc/php-fpm.d/www.conf' do
   action :delete
   notifies :restart, 'service[php-fpm]', :delayed
 end
 
-directory "/var/lib/php/session" do
+directory '/var/lib/php/session' do
   recursive true
   owner node['nginx']['user']
   group node['nginx']['user']
 end
 
-template "/etc/php-fpm.d/fpm.conf" do
-  source "fpm.conf.erb"
-  variables({
-    :vhosts => node['vhosts'],
-    :nginx => node['nginx'],
-  })
+template '/etc/php-fpm.d/fpm.conf' do
+  source 'fpm.conf.erb'
+  variables(
+    vhosts: node['vhosts'],
+    nginx: node['nginx']
+  )
   notifies :restart, 'service[php-fpm]', :delayed
 end
 
@@ -61,19 +62,7 @@ template '/etc/php.ini' do
   source 'php.ini.erb'
   notifies :restart, 'service[php-fpm]', :delayed
   variables(
-    :php => node['php'],
+    php: node['php']
   )
   notifies :restart, 'service[php-fpm]', :delayed
 end
-
-#cookbook_file '/etc/yum.repos.d/tamulib-bugfix-curl.repo' do
-#  source 'tamulib-bugfix-curl.repo'
-#end
-
-#['libcurl', 'curl'].each do |pkg|
-#  yum_package pkg do
-#    action :upgrade
-#    flush_cache :before => true
-#    notifies :restart, 'service[php-fpm]', :delayed
-#  end
-#end

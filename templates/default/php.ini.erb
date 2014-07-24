@@ -23,10 +23,10 @@ expose_php = Off
 max_execution_time = 30     
 max_input_time = 60
 memory_limit = 128M
-error_reporting = E_ALL & ~E_DEPRECATED
+error_reporting = <%=@php['ini']['error_reporting']%>
 display_errors = Off
 display_startup_errors = Off
-log_errors = On
+log_errors = <%=@php['ini']['log_errors']%>
 log_errors_max_len = 1024
 ignore_repeated_errors = Off
 ignore_repeated_source = Off

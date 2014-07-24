@@ -5,6 +5,9 @@ server {
   <%= "client_max_body_size #{@info['max_body']};" if @info.key? 'max_body' %>
   error_log <%= @info.key?('error_log') ? @info['error_log'] : File.join(@nginx['log_dir'], @name + "-error.log") %>;
   access_log <%= @info.key?('access_log') ? @info['access_log'] : File.join(@nginx['log_dir'], @name + "-access.log") %>;
+  <% if @info.key?('rewritefile') -%>
+  include <%= @info['rewritefile'] -%>;
+  <% end -%>
   location / {
     root <%= @info['root'] -%>;
     index <%= "index.php" if @info.key? 'php' and @info['php'] -%> index.html index.htm;
@@ -16,8 +19,8 @@ server {
   }
   <% if @info.key?('php') -%>
   location ~ \.php$ {
-    root <%= @info['php'].key?('root') ? @info['php']['root'] :  @info['root'] -%>;
-    fastcgi_pass <%= "unix:/var/lib/nginx/#{@name}.sock"  -%>;
+    root <%= @info['php'].key?('root') ? @info['php']['root'] : @info['root'] -%>;
+    fastcgi_pass <%= "unix:/var/lib/nginx/#{@name}.sock" -%>;
     fastcgi_index <%= (@info['php'].key?('index')) ? @info['php']['index'] : 'index.php' -%>;
     fastcgi_param SCRIPT_FILENAME <%= (@info['php'].key?('root')) ? @info['php']['root'] : @info['root'] -%>$fastcgi_script_name;
     include fastcgi_params;
@@ -31,3 +34,4 @@ server {
   <% end #each -%>
   <% end #if uwsgi-%>
 }
+

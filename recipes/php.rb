@@ -13,7 +13,7 @@ end
 
 service 'php-fpm' do
   supports status: true, restart: true
-  action [:start, :enable]
+#  action [:start, :enable]
 end
 
 node['php']['modules'].each do |name|
@@ -47,6 +47,13 @@ directory '/var/lib/php/session' do
   recursive true
   owner node['nginx']['user']
   group node['nginx']['user']
+end
+
+if node['rewritefile']
+	cookbook_file "/etc/nginx/#{node['rewritefile']}" do
+	  source node['rewritefile']
+	  action :create_if_missing
+	end
 end
 
 template '/etc/php-fpm.d/fpm.conf' do

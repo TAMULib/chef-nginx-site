@@ -44,7 +44,13 @@ Attributes
     <td><tt>['php']['ini']</tt></td>
     <td>Hash</td>
     <td>the php ini configuration</td>
-    <td><tt>currently two available: post_max_size, upload_max_filesize, timezone</tt></td>
+    <td><tt>currently Five available:<br>
+	post_max_size ( default = 8M )<br>
+	upload_max_filesize ( default = 8M )<br>
+	timezone ( default = America/Chicago )<br>
+	error_reporting ( default = E_ERROR | E_WARNING | E_PARSE )<br>
+	log_errors ( default = on )	
+	</tt></td>
   </tr>
   <tr>
     <td><tt>['mssql']</tt></td>
@@ -52,6 +58,12 @@ Attributes
     <td>the mssql server configuration (freetds)</td>
     <td><tt>nil</tt></td>
   </tr>
+  <tr>
+    <td><tt>['mssql']</tt></td>
+    <td>Hash</td>
+    <td>the mssql server configuration (freetds)</td>
+    <td><tt>nil</tt></td>
+  </tr>  
 
 </table>
 
@@ -76,6 +88,7 @@ Include `nginx-site` in your node's `run_list`:
 - 'server_name' - (required) server name
 - 'root' - (required) server root
 - 'default' - whether it's default site, default false
+- 'rewritefile' - The name of a file with rewrite rules in it.  This file will be copied from the cookbook /files store and included in the sites-enabled configuration file.  This is used by Guides on the Side.
 - 'autoindex' - whether autoindex is enabled for the root directory, default false
 - 'error_log' - error log, default "#{node['nginx']['log_dir']}/name-error.log"
 - 'access_log' - access log, default "#{node['nginx']['log_dir']}/name-access.log"
@@ -110,6 +123,77 @@ default_attributes(
     },
   },
 )
+```
+
+```ruby
+name "guideonthesidedev"
+description "Guide on the Side Dev Server"
+run_list(
+  "recipe[nginx-site::php@0.2.2]",
+  "recipe[guide@0.2.0]",
+)
+
+default_attributes(
+  'logstash' => {
+    'disabled' => true,
+  },
+  'php' => {
+    'modules' => [
+      'ldap',
+      'mysql',
+      'imap',
+      'xml',
+    ],  
+  },
+  'mssql' => {
+    'mssql-prod3' => {
+      'host' => 'mssql-prod3.library.tamu.edu',
+      'instance' => 'mssqlprod3',
+      'tds version' => '7.0',
+    },
+    'mssql-prod4' => {
+      'host' => 'mssql-prod4.library.tamu.edu',
+      'instance' => 'mssqlprod4',
+      'tds version' => '7.0',
+    },
+    'mssql-sp1' => {
+      'host' => 'mssql-sp1.library.tamu.edu',
+      'instance' => 'mssqlsp1',
+      'tds version' => '7.0',
+    },
+    'mssql-sp2' => {
+      'host' => 'mssql-sp2.library.tamu.edu',
+      'instance' => 'mssqlsp2',
+      'tds version' => '7.0',
+    },
+    'mssql-dev3' => {
+      'host' => 'mssql-dev3.library.tamu.edu',
+      'instance' => 'mssqldev3',
+      'tds version' => '7.0',
+    },
+  },
+  'vhosts' => {
+    'gots' => {
+      'server_name' => 'osd9.library.tamu.edu',
+      'root' => '/data/gots/',
+      'default' => true,
+      'rewritefile' => 'gots_rewrite_rules',
+      'php' => {
+        'root' => '/data/gots/',
+      },
+    },
+  },
+  'log' => {
+    '/var/log/nginx/error.log' => {
+      'type' => 'nginxerror',
+      'tag' => 'osd9.library.tamu.edu',
+      'extra' => {
+        'add_field' => '[ "site", "osd9.library.tamu.edu" ]',
+      },
+    },
+  },
+)
+
 ```
 
 Contributing

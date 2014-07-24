@@ -36,12 +36,8 @@ suites:
           root: "/tmp"
           default: true
           autoindex: true
-          max_body: '16M'
           php:
             root: '/tmp/php'
-            ini:
-              post_max_size: '16M'
-              upload_max_filesize: '16M'
       mssql:
         mssql1:
           attr1: val1

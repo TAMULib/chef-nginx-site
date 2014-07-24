@@ -44,13 +44,13 @@ Attributes
     <td><tt>['php']['ini']</tt></td>
     <td>Hash</td>
     <td>the php ini configuration</td>
-    <td><tt>currently Five available:<br>
+    <td>currently Five available:<br>
 	post_max_size ( default = 8M )<br>
 	upload_max_filesize ( default = 8M )<br>
 	timezone ( default = America/Chicago )<br>
 	error_reporting ( default = E_ERROR | E_WARNING | E_PARSE )<br>
 	log_errors ( default = on )	
-	</tt></td>
+	</td>
   </tr>
   <tr>
     <td><tt>['mssql']</tt></td>

@@ -44,12 +44,13 @@ Attributes
     <td><tt>['php']['ini']</tt></td>
     <td>Hash</td>
     <td>the php ini configuration</td>
-    <td>currently Five available:<br>
+    <td>currently Six available:<br>
 	post_max_size ( default = 8M )<br>
 	upload_max_filesize ( default = 8M )<br>
 	timezone ( default = America/Chicago )<br>
 	error_reporting ( default = E_ERROR | E_WARNING | E_PARSE )<br>
-	log_errors ( default = on )	
+	log_errors ( default = on )<br>
+	modules
 	</td>
   </tr>
   <tr>
@@ -88,7 +89,6 @@ Include `nginx-site` in your node's `run_list`:
 - 'server_name' - (required) server name
 - 'root' - (required) server root
 - 'default' - whether it's default site, default false
-- 'rewritefile' - The name of a file with rewrite rules in it.  This file will be copied from the cookbook /files store and included in the sites-enabled configuration file.  This is used by Guides on the Side.
 - 'autoindex' - whether autoindex is enabled for the root directory, default false
 - 'error_log' - error log, default "#{node['nginx']['log_dir']}/name-error.log"
 - 'access_log' - access log, default "#{node['nginx']['log_dir']}/name-access.log"
@@ -143,6 +143,9 @@ default_attributes(
       'mysql',
       'imap',
       'xml',
+	  'mbstring',
+	  'gd', 
+	  'tidy'	  
     ],  
   },
   'mssql' => {
@@ -175,11 +178,10 @@ default_attributes(
   'vhosts' => {
     'gots' => {
       'server_name' => 'osd9.library.tamu.edu',
-      'root' => '/data/gots/',
+      'root' => '/data/guides_on_the_side/',
       'default' => true,
-      'rewritefile' => 'gots_rewrite_rules',
       'php' => {
-        'root' => '/data/gots/',
+        'root' => '/data/guides_on_the_side/',
       },
     },
   },

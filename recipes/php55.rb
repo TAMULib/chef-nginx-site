@@ -7,7 +7,14 @@
 #
 include_recipe 'nginx-site::default'
 
-package 'php-fpm' do
+execute 'checkrpm' do
+  command 'rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm'
+  returns [0, 1]
+  user "root"
+end
+
+execute 'php55w-fpm.x86_64' do
+  command 'yum -y install php55w-fpm.x86_64'
   not_if { File.exist? '/usr/sbin/php-fpm' }
 end
 
@@ -18,7 +25,8 @@ end
 
 node['php']['modules'].each do |name|
 
-  package "php-#{name}" do
+  execute "php55w-#{name}" do
+    command "yum -y install php55w-#{name}"
     notifies :restart, 'service[php-fpm]', :delayed
   end
 
@@ -35,16 +43,16 @@ node['php']['modules'].each do |name|
       notifies :restart, 'service[php-fpm]', :delayed
     end
   end
-
+   
   if name == 'ldap'  
 	cookbook_file '/etc/openldap/ldap.conf' do
 	  source 'ldap.conf'
 	  action :create
 	end
   end 
+   
+end
 
-end 
-  
 file '/etc/php-fpm.d/www.conf' do
   action :delete
   notifies :restart, 'service[php-fpm]', :delayed

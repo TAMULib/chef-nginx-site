@@ -3,6 +3,13 @@ nginx-site CHANGELOG
 
 This file is used to list changes made in each version of the nginx-site cookbook.
 
+0.2.3
+-----
+- Added PHP 5.5 Recipe
+	to use it add to run list "recipe[nginx-site::php55@0.2.3]"
+    this calls the php55 recipe instead
+- Added ldap.conf file that is copied over if using ldap / php.  This allows for self signed certs
+
 0.2.2
 -----
 - Updated cookbook to work smoother with Chef11

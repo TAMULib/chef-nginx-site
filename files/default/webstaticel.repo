@@ -1,0 +1,6 @@
+[webstaticel]
+name = Webtatic EL yum repository
+baseurl = https://mirror.webtatic.com/yum/el6/latest.rpm
+enabled = 1
+protect = 0
+gpgcheck = 0

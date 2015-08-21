@@ -4,3 +4,4 @@ default['php']['ini']['upload_max_filesize'] = '8M'
 default['php']['modules'] = []
 default['php']['ini']['error_reporting'] = 'E_ERROR | E_WARNING | E_PARSE'
 default['php']['ini']['log_errors'] = 'on'
+default['cascade']['stage'] = 'unk'

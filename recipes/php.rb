@@ -56,13 +56,25 @@ directory '/var/lib/php/session' do
   group node['nginx']['user']
 end
 
-template '/etc/php-fpm.d/fpm.conf' do
-  source 'fpm.conf.erb'
-  variables(
-    vhosts: node['vhosts'],
-    nginx: node['nginx']
-  )
-  notifies :restart, 'service[php-fpm]', :delayed
+if node['cascade']['stage'] == 'prod'  
+	cookbook_file '/etc/php-fpm.d/fpm.conf' do
+		source 'prod_fpm.conf'
+		action :create
+	end
+elsif node['cascade']['stage'] == 'pre'  
+	cookbook_file '/etc/php-fpm.d/fpm.conf' do
+		source 'pre_fpm.conf'
+		action :create
+	end
+else
+	template '/etc/php-fpm.d/fpm.conf' do
+	  source 'fpm.conf.erb'
+	  variables(
+		vhosts: node['vhosts'],
+		nginx: node['nginx']
+	  )
+	  notifies :restart, 'service[php-fpm]', :delayed
+	end
 end
 
 template '/etc/php.ini' do

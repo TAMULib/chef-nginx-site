@@ -25,6 +25,9 @@ server {
     fastcgi_pass <%= "unix:/var/lib/nginx/#{@name}.sock" -%>;
     fastcgi_index <%= (@info['php'].key?('index')) ? @info['php']['index'] : 'index.php' -%>;
     fastcgi_param SCRIPT_FILENAME <%= (@info['php'].key?('root')) ? @info['php']['root'] : @info['root'] -%>$fastcgi_script_name;
+	<% if @info['fastcgi_read_timeout'] -%>
+    fastcgi_read_timeout <%= @info['fastcgi_read_timeout'] -%>;
+	<% end -%>
     include fastcgi_params;
   }
   <% end #phpcgi -%>

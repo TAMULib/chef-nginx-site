@@ -88,6 +88,7 @@ Include `nginx-site` in your node's `run_list`:
 - key - name
 - 'server_name' - (required) server name
 - 'root' - (required) server root
+- 'fastcgi_read_timeout' override the default timeout for scripts
 - 'default' - whether it's default site, default false
 - 'autoindex' - whether autoindex is enabled for the root directory, default false
 - 'error_log' - error log, default "#{node['nginx']['log_dir']}/name-error.log"
@@ -117,6 +118,7 @@ default_attributes(
       'server_name' => 'test.com',
       'root' => '/usr/share/nginx/www',
       'default' => true,
+	  'fastcgi_read_timeout' => '60',	  
       'php' => {
         'root' => '/usr/share/nginx/php',
       },

@@ -3,6 +3,10 @@ nginx-site CHANGELOG
 
 This file is used to list changes made in each version of the nginx-site cookbook.
 
+0.2.6
+-----
+- Added fastcgi_read_timeout
+
 0.2.3
 -----
 - Added PHP 5.5 Recipe

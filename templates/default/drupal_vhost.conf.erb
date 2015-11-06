@@ -1,0 +1,60 @@
+server {
+  listen 80 <%= 'default' if @info['default'] -%>;
+  server_name <%= @info['server_name'] -%>;
+  server_tokens off;
+  <%= "client_max_body_size #{@info['max_body']};" if @info.key? 'max_body' %>
+  error_log <%= @info.key?('error_log') ? @info['error_log'] : File.join(@nginx['log_dir'], @name + "-error.log") %>;
+  access_log <%= @info.key?('access_log') ? @info['access_log'] : File.join(@nginx['log_dir'], @name + "-access.log") %>;
+
+  error_page 404 /404.html;
+  
+  include /etc/nginx/rewrite*.conf;
+
+## Default location
+location ~* files/articulate {
+  root <%= @info['root'] -%>;
+  index  index.html;
+}
+
+location ~* files/styles {
+  root <%= @info['root'] -%>;
+  access_log off;
+  expires 30d;
+  try_files $uri @drupal;
+}
+
+## serve imagecache files directly or redirect to drupal if they do not exist.
+location ~* ^.+.(xsl|xml)$ {
+  root <%= @info['root'] -%>;
+  access_log off;
+  expires 1d;
+  try_files $uri @drupal;
+}
+
+## Default location
+location / {
+  root <%= @info['root'] -%>;
+  try_files $uri $uri/ @drupal;
+  index index.php;
+}
+
+location @drupal {
+  root <%= @info['root'] -%>;
+  rewrite ^/(.*)$ /index.php?q=$1 last;
+}
+
+<% if @info.key?('php') -%>
+location ~ \.php$ {
+	root <%= @info['php'].key?('root') ? @info['php']['root'] : @info['root'] -%>;
+	fastcgi_pass <%= "unix:/var/lib/nginx/#{@name}.sock" -%>;
+	fastcgi_index <%= (@info['php'].key?('index')) ? @info['php']['index'] : 'index.php' -%>;
+	fastcgi_param SCRIPT_FILENAME <%= (@info['php'].key?('root')) ? @info['php']['root'] : @info['root'] -%>$fastcgi_script_name;
+	<% if @info['fastcgi_read_timeout'] -%>
+	fastcgi_read_timeout <%= @info['fastcgi_read_timeout'] -%>;
+	<% end -%>
+	include fastcgi_params;
+}
+<% end #phpcgi -%>  
+  
+}
+

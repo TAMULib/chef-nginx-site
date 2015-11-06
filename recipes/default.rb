@@ -28,7 +28,7 @@ if node['vhosts'].is_a? Hash
 
   node['vhosts'].each do |name, info|
 
-    if info.key?('mkdir') && info['mkdir']
+    if node['drupal']['site'] 
       if !File.exist?(info['root'])
         directory info['root'] do
           owner node['nginx']['user']
@@ -47,16 +47,30 @@ if node['vhosts'].is_a? Hash
       end
     end
 
-    template name do
-      source 'vhost.conf.erb'
-      path File.join('/etc/nginx/sites-available/', name)
-      variables(
-        name: name,
-        info: info,
-        nginx: node['nginx']
-      )
-      notifies :restart, 'service[nginx]', :delayed
-    end
+	if node['vhosts'].is_a? Hash
+		template name do
+		  source 'drupal_vhost.conf.erb'
+		  path File.join('/etc/nginx/sites-available/', name)
+		  variables(
+			name: name,
+			info: info,
+			nginx: node['nginx']
+		  )
+		  notifies :restart, 'service[nginx]', :delayed
+		end
+	else
+		template name do
+		  source 'vhost.conf.erb'
+		  path File.join('/etc/nginx/sites-available/', name)
+		  variables(
+			name: name,
+			info: info,
+			nginx: node['nginx']
+		  )
+		  notifies :restart, 'service[nginx]', :delayed
+		end
+	end
+	
     nginx_site name do
       action :enable
     end

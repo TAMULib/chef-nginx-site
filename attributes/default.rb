@@ -5,5 +5,6 @@ default['php']['modules'] = []
 default['php']['ini']['error_reporting'] = 'E_ERROR | E_WARNING | E_PARSE'
 default['php']['ini']['log_errors'] = 'on'
 default['cascade']['stage'] = 'unk'
+default['drupal']['site'] = false
 default['php']['ini']['max_input_vars'] = '8M'
 default['php']['ini']['smtp'] = 'localhost'

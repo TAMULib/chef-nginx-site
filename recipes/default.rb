@@ -28,7 +28,7 @@ if node['vhosts'].is_a? Hash
 
   node['vhosts'].each do |name, info|
 
-    if node['drupal']['site'] 
+    if info.key?('mkdir') && info['mkdir']
       if !File.exist?(info['root'])
         directory info['root'] do
           owner node['nginx']['user']
@@ -47,7 +47,7 @@ if node['vhosts'].is_a? Hash
       end
     end
 
-	if node['vhosts'].is_a? Hash
+	if node['drupal']['site'] 
 		template name do
 		  source 'drupal_vhost.conf.erb'
 		  path File.join('/etc/nginx/sites-available/', name)

@@ -66,6 +66,11 @@ elsif node['cascade']['stage'] == 'pre'
 		source 'pre_fpm.conf'
 		action :create
 	end
+elsif node['cascade']['stage'] == 'new'  
+	cookbook_file '/etc/php-fpm.d/fpm.conf' do
+		source 'pre_fpm.conf'
+		action :create
+	end	
 else
 	template '/etc/php-fpm.d/fpm.conf' do
 	  source 'fpm.conf.erb'

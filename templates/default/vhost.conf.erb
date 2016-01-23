@@ -9,6 +9,7 @@ server {
   error_page 404 /404.html;
   
   include /etc/nginx/rewrite*.conf;
+  add_header 'Access-Control-Allow-Origin' *;
 
   location / {
     root <%= @info['root'] -%>;
@@ -21,6 +22,8 @@ server {
   }
   <% if @info.key?('php') -%>
   location ~ \.php$ {
+    fastcgi_buffers 16 16k; 
+    fastcgi_buffer_size 32k;
     root <%= @info['php'].key?('root') ? @info['php']['root'] : @info['root'] -%>;
     fastcgi_pass <%= "unix:/var/lib/nginx/#{@name}.sock" -%>;
     fastcgi_index <%= (@info['php'].key?('index')) ? @info['php']['index'] : 'index.php' -%>;

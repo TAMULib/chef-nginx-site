@@ -16,6 +16,10 @@ location ~* files/articulate {
   index  index.html;
 }
 
+location /webassets {
+	alias /mnt/webassets;
+}
+
 location ~* files/styles {
   root <%= @info['root'] -%>;
   access_log off;

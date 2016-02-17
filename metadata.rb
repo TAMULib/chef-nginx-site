@@ -4,5 +4,5 @@ maintainer_email 'yli@library.tamu.edu'
 license          ''
 description      'Installs/Configures nginx-site'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.2.8'
+version          '0.2.9'
 depends          'nginx','~> 2.6'

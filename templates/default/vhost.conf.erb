@@ -9,7 +9,7 @@ server {
   error_page 404 /404.html;
   
   include /etc/nginx/rewrite*.conf;
-  add_header 'Access-Control-Allow-Origin' *;
+  add_header 'Access-Control-Allow-Origin' '*';
 
   location / {
     root <%= @info['root'] -%>;

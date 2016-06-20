@@ -10,6 +10,10 @@ server {
   
   include /etc/nginx/rewrite*.conf;
 
+location ~ /\.git {
+deny all;
+}  
+  
 ## Default location
 location ~* files/articulate {
   root <%= @info['root'] -%>;

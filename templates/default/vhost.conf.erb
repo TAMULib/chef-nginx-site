@@ -11,6 +11,10 @@ server {
   include /etc/nginx/rewrite*.conf;
   add_header 'Access-Control-Allow-Origin' '*';
 
+  location ~ /\.git {
+    deny all;
+  }  
+  
   location / {
     root <%= @info['root'] -%>;
     index <%= "index.php" if @info.key? 'php' and @info['php'] -%> index.html index.htm;

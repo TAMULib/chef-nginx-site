@@ -9,8 +9,15 @@ server {
   error_page 404 /404.html;
   
   include /etc/nginx/rewrite*.conf;
+  
+  <% if @info['allow_origin'] -%>
   add_header 'Access-Control-Allow-Origin' '*';
+  <% end -%>
 
+  <% if @info['disable_clickjacking'] -%>
+  add_header X-Frame-Options SAMEORIGIN;
+  <% end -%>
+  
   location ~ /\.git {
     deny all;
   }  

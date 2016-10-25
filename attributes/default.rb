@@ -1,8 +1,9 @@
 default['php']['ini']['timezone'] = 'America/Chicago'
 default['php']['ini']['post_max_size'] = '8M'
 default['php']['ini']['upload_max_filesize'] = '8M'
+default['php']['ini']['memory_limit'] = '128M'
 default['php']['modules'] = []
-default['php']['ini']['error_reporting'] = 'E_ERROR | E_WARNING | E_PARSE'
+default['php']['ini']['error_reporting'] = 'E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED'
 default['php']['ini']['log_errors'] = 'on'
 default['cascade']['stage'] = 'unk'
 default['drupal']['site'] = false
